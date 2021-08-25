@@ -1,9 +1,16 @@
 <template>
-  <div class="bg-gray-500">Home</div>
+  <div class="container mx-auto">
+    <PopularMovies />
+  </div>
 </template>
 
 <script>
-export default {};
+import PopularMovies from "./PopularMovies";
+export default {
+  components: {
+    PopularMovies,
+  },
+};
 </script>
 
 <style>
