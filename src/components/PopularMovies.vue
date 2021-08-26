@@ -13,12 +13,12 @@
         gap-8
       "
     >
-      <MovieItem />
-      <MovieItem />
-      <MovieItem />
-      <MovieItem />
-      <MovieItem />
-      <MovieItem />
+      <MovieItem
+        :key="movie.id"
+        v-for="movie in movies"
+        :movie="movie"
+        :genres="genres"
+      />
     </div>
   </div>
 </template>
@@ -28,6 +28,36 @@ import MovieItem from "./items/MovieItem.vue";
 export default {
   components: {
     MovieItem,
+  },
+
+  data: function () {
+    return {
+      movies: [],
+      genres: [],
+    };
+  },
+
+  async mounted() {
+    this.fetchGenres();
+    try {
+      const response = await this.$http.get("/movie/popular");
+      this.movies = response.data.results;
+      //  console.log(response.data.results[0].title);
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
+  methods: {
+    async fetchGenres() {
+      try {
+        const response = await this.$http.get("/genre/movie/list");
+        this.genres = response.data.genres;
+        //   console.log(this.genres[7].name);
+      } catch (error) {
+        console.log(error);
+      }
+    },
   },
 };
 </script>

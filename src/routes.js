@@ -1,6 +1,6 @@
 import VueRouter from "vue-router";
 import Home from './components/Home';
-import Movie from './components/Movie.vue';
+import Movie from './components/movies/Movie.vue';
 
 let router = new VueRouter({
    mode: 'history',

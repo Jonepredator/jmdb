@@ -70,14 +70,17 @@
     </div>
 
     <Cast />
+    <Images />
   </div>
 </template>
 
 <script>
 import Cast from "./Cast.vue";
+import Images from "./Images";
 export default {
   components: {
     Cast,
+    Images,
   },
 };
 </script>

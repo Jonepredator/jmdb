@@ -1,10 +1,12 @@
 <template>
   <div class="flex">
-    <img src="@/assets/images/logo.png" alt="logo" class="mb-4" />
+    <router-link to="/">
+      <img src="@/assets/images/logo.png" alt="logo" class="mb-4" />
+    </router-link>
 
     <ul class="flex mt-3.5">
       <li>
-        <router-link to="/movies" class="ml-8"> Movies </router-link>
+        <router-link to="/" class="ml-8"> Movies </router-link>
       </li>
       <li>
         <router-link to="/actors" class="ml-8"> Actors </router-link>

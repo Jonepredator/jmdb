@@ -2,12 +2,12 @@
   <div>
     <router-link to="/movie/11">
       <img
-        src="@/assets/images/space-jam.jpg"
+        :src="posterPath"
         alt="space-jam"
         class="hover:opacity-75 transition ease-in duration-300"
       />
     </router-link>
-    <h3>2067</h3>
+    <h3>{{ movie.title }}</h3>
     <div class="flex">
       <svg class="fill-current text-yellow-600 w-4" viewBox="0 0 576 512">
         <path
@@ -15,14 +15,50 @@
           data-icon="star"
         />
       </svg>
-      <span class="ml-2"> 47% | 2020-10-01</span> <br />
+      <span class="ml-2">
+        {{ movie.vote_average * 10 }}% | {{ movie.release_date }}</span
+      >
+      <br />
     </div>
-    <span class="text-sm text-gray-500">Science Fiction, Thriller, Drama</span>
+    <span class="text-sm text-gray-500">
+      <span :key="genre" v-for="(genre, index) in movie.genre_ids">
+        {{ genreTypeName(genre, index) }}
+      </span>
+    </span>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  props: {
+    movie: {
+      required: true,
+    },
+    genres: {
+      required: true,
+    },
+  },
+
+  computed: {
+    posterPath() {
+      return "https://image.tmdb.org/t/p/w500/" + this.movie.poster_path;
+    },
+  },
+
+  methods: {
+    genreTypeName(genreId, index) {
+      for (const item of this.genres) {
+        if (item.id == genreId) {
+          if (this.movie.genre_ids.length - 1 == index) {
+            return item.name;
+          } else {
+            return item.name + ",";
+          }
+        }
+      }
+    },
+  },
+};
 </script>
 
 <style>
