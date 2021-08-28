@@ -3,61 +3,35 @@
     <h2 class="text-4xl font-semibold mb-5">Cast</h2>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-      <div class="mr-2 mb-5">
+      <div class="mr-1 mb-5" :key="index" v-for="(cast, index) in casts">
         <img
-          src="https://m.media-amazon.com/images/M/MV5BMzE2NzEwMTUxM15BMl5BanBnXkFtZTYwMzQ4NTQz._V1_UX214_CR0,0,214,317_AL_.jpg"
-          alt="Lebron-James"
+          :src="castProfileImage(cast)"
+          alt="Profile-image"
           class="hover:opacity-60 transition ease-in duration-200"
         />
-        <span class="text-gray-300">Lebron James / SpaceMan</span>
-      </div>
-
-      <div class="mr-2 mb-5">
-        <img
-          src="https://m.media-amazon.com/images/M/MV5BMzE2NzEwMTUxM15BMl5BanBnXkFtZTYwMzQ4NTQz._V1_UX214_CR0,0,214,317_AL_.jpg"
-          alt="Lebron-James"
-          class="hover:opacity-60 transition ease-in duration-200"
-        />
-        <span class="text-gray-300">Lebron James / SpaceMan</span>
-      </div>
-      <div class="mr-2 mb-5">
-        <img
-          src="https://m.media-amazon.com/images/M/MV5BMzE2NzEwMTUxM15BMl5BanBnXkFtZTYwMzQ4NTQz._V1_UX214_CR0,0,214,317_AL_.jpg"
-          alt="Lebron-James"
-          class="hover:opacity-60 transition ease-in duration-200"
-        />
-        <span class="text-gray-300">Lebron James / SpaceMan</span>
-      </div>
-      <div class="mr-2 mb-5">
-        <img
-          src="https://m.media-amazon.com/images/M/MV5BMzE2NzEwMTUxM15BMl5BanBnXkFtZTYwMzQ4NTQz._V1_UX214_CR0,0,214,317_AL_.jpg"
-          alt="Lebron-James"
-          class="hover:opacity-60 transition ease-in duration-200"
-        />
-        <span class="text-gray-300">Lebron James / SpaceMan</span>
-      </div>
-      <div class="mr-2 mb-5">
-        <img
-          src="https://m.media-amazon.com/images/M/MV5BMzE2NzEwMTUxM15BMl5BanBnXkFtZTYwMzQ4NTQz._V1_UX214_CR0,0,214,317_AL_.jpg"
-          alt="Lebron-James"
-          class="hover:opacity-60 transition ease-in duration-200"
-        />
-        <span class="text-gray-300">Lebron James / SpaceMan</span>
-      </div>
-      <div class="mr-2 mb-5">
-        <img
-          src="https://m.media-amazon.com/images/M/MV5BMzE2NzEwMTUxM15BMl5BanBnXkFtZTYwMzQ4NTQz._V1_UX214_CR0,0,214,317_AL_.jpg"
-          alt="Lebron-James"
-          class="hover:opacity-60 transition ease-in duration-200"
-        />
-        <span class="text-gray-300">Lebron James / SpaceMan</span>
+        <span class="text-gray-300">{{ cast.name }}</span>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  props: {
+    casts: {
+      required: true,
+    },
+  },
+  methods: {
+    castProfileImage(cast) {
+      if (cast.profile_path) {
+        return "https://image.tmdb.org/t/p/w300/" + cast.profile_path;
+      } else {
+        return "https://via.placeholder.com/300x450";
+      }
+    },
+  },
+};
 </script>
 
 <style>

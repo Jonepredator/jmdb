@@ -1,9 +1,9 @@
 <template>
   <div>
     <div class="container mx-auto flex mt-20 border-b border-gray-600 pb-2">
-      <img src="@/assets/images/space-jam.jpg" alt="" class="w-64" />
+      <img :src="posterPath" alt="" class="w-64" />
       <div class="ml-24">
-        <h2 class="text-4xl font-semibold">Space-Jam</h2>
+        <h2 class="text-4xl font-semibold">{{ this.movie.title }}</h2>
         <span class="text-gray-500 text-sm flex">
           <svg
             class="fill-current text-yellow-600 w-4 mr-1"
@@ -14,34 +14,43 @@
               data-icon="star"
             />
           </svg>
-          47% | 2020-10-01 Science Fiction, Thriller, Drama</span
-        >
+          {{ this.movie.vote_average * 10 }} % |
+          {{ this.movie.release_date }}
+          <span :key="index" v-for="(item, index) in movie.genres" class="ml-1">
+            {{ item.name }}
+            <span v-if="movie.genres.length - 1 != index">,</span>
+          </span>
+        </span>
         <p class="mt-5">
-          A rogue artificial intelligence kidnaps the son of famed basketball
-          player LeBron James, who then has to work with Bugs Bunny to win a
-          basketball game.
+          {{ this.movie.overview }}
         </p>
 
         <div class="mt-5">
           <span class="mt-5 font-semibold">Featured Cast</span>
 
           <div class="flex">
-            <div class="flex flex-col mt-5 mr-5">
-              <span>Leo Benvenuti</span>
+            <div :key="index" v-for="(crew, index) in movie.credits.crew">
+              <div v-if="index < 2" class="flex flex-col mt-5 mr-5">
+                <span>{{ crew.name }}</span>
 
-              <span class="text-gray-500">Writer</span>
-            </div>
-            <div class="flex flex-col mt-5">
-              <span>Allison Abbate</span>
-
-              <span class="text-gray-500">Executive producer</span>
+                <span class="text-gray-500">{{ crew.job }}</span>
+              </div>
             </div>
           </div>
         </div>
-        <div class="mt-10">
+        <div class="mt-5">
           <a
-            href="#"
-            class="rounded bg-yellow-500 px-5 py-3 inline-flex text-black"
+            @click.prevent="openYoutubeModal"
+            target="blank"
+            class="
+              rounded
+              bg-yellow-500
+              px-5
+              py-3
+              inline-flex
+              text-black
+              cursor-pointer
+            "
           >
             <svg class="w-6 fill-current" viewBox="0 0 512 512">
               <path d="M0 0h24v24H0z" fill="none" />
@@ -69,18 +78,81 @@
       </div>
     </div>
 
-    <Cast />
-    <Images />
+    <Cast :casts="movie.credits.cast" />
+    <Images
+      :images="movie.images.backdrops"
+      v-on:on-image-click="showImageModal"
+    />
+    <MediaModal
+      v-model="modalOpen"
+      :mediaURL="mediaURL"
+      :isVideo="this.isVideo"
+    />
   </div>
 </template>
 
 <script>
 import Cast from "./Cast.vue";
 import Images from "./Images";
+import MediaModal from "../modals/MediaModal.vue";
 export default {
   components: {
     Cast,
     Images,
+    MediaModal,
+  },
+  data() {
+    return {
+      movie: {
+        credits: {
+          crew: {},
+        },
+        images: {
+          backdrops: {},
+        },
+      },
+      modalOpen: false,
+      isVideo: false,
+      mediaURL: "",
+    };
+  },
+  mounted() {
+    this.fetchMovie(this.$route.params.id);
+  },
+
+  methods: {
+    async fetchMovie(movieId) {
+      const response = await this.$http.get(
+        "/movie/" + movieId + "?append_to_response=credits,videos,images"
+      );
+      this.movie = response.data;
+    },
+
+    openYoutubeModal() {
+      this.mediaURL = this.youtubeVideo();
+      this.isVideo = true;
+      this.modalOpen = true;
+    },
+    openImageModal() {
+      this.isVideo = false;
+      this.modalOpen = true;
+    },
+    youtubeVideo() {
+      if (!this.movie.videos) return;
+      return (
+        "https://www.youtube.com/embed/" + this.movie.videos.results[0].key
+      );
+    },
+    showImageModal(imageFullPath) {
+      this.mediaURL = imageFullPath;
+      this.isVideo = false;
+      this.modalOpen = true;
+    },
+  },
+  computed: {
+    posterPath() {
+      return "https://image.tmdb.org/t/p/w500/" + this.movie.poster_path;
+    },
   },
 };
 </script>

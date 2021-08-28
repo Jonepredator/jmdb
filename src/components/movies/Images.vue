@@ -3,78 +3,45 @@
     <h2 class="text-4xl font-semibold mb-5">Images</h2>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-      <div class="mr-2 mb-5">
+      <div :key="index" v-for="(image, index) in images" class="mr-2 mb-5">
         <img
-          src="https://www.themoviedb.org/t/p/w500_and_h282_face/vVROCF9jnPmLh1ly29tFOlLax5x.jpg"
-          alt="Lebron-James"
+          @click="openModal(image)"
+          :src="movieImage(image)"
+          alt="movie-images"
           class="hover:opacity-60 transition ease-in duration-300"
         />
-        <span class="text-gray-300">Lebron James / SpaceMan</span>
-      </div>
-
-      <div class="mr-2 mb-5">
-        <img
-          src="https://www.themoviedb.org/t/p/w500_and_h282_face/vVROCF9jnPmLh1ly29tFOlLax5x.jpg"
-          alt="Lebron-James"
-          class="hover:opacity-60 transition ease-in duration-200"
-        />
-        <span class="text-gray-300">Lebron James / SpaceMan</span>
-      </div>
-
-      <div class="mr-2 mb-5">
-        <img
-          src="https://www.themoviedb.org/t/p/w500_and_h282_face/vVROCF9jnPmLh1ly29tFOlLax5x.jpg"
-          alt="Lebron-James"
-          class="hover:opacity-60 transition ease-in duration-200"
-        />
-        <span class="text-gray-300">Lebron James / SpaceMan</span>
-      </div>
-      <div class="mr-2 mb-5">
-        <img
-          src="https://www.themoviedb.org/t/p/w500_and_h282_face/vVROCF9jnPmLh1ly29tFOlLax5x.jpg"
-          alt="Lebron-James"
-          class="hover:opacity-60 transition ease-in duration-200"
-        />
-        <span class="text-gray-300">Lebron James / SpaceMan</span>
-      </div>
-      <div class="mr-2 mb-5">
-        <img
-          src="https://www.themoviedb.org/t/p/w500_and_h282_face/vVROCF9jnPmLh1ly29tFOlLax5x.jpg"
-          alt="Lebron-James"
-          class="hover:opacity-60 transition ease-in duration-200"
-        />
-        <span class="text-gray-300">Lebron James / SpaceMan</span>
-      </div>
-      <div class="mr-2 mb-5">
-        <img
-          src="https://www.themoviedb.org/t/p/w500_and_h282_face/vVROCF9jnPmLh1ly29tFOlLax5x.jpg"
-          alt="Lebron-James"
-          class="hover:opacity-60 transition ease-in duration-200"
-        />
-        <span class="text-gray-300">Lebron James / SpaceMan</span>
-      </div>
-      <div class="mr-2 mb-5">
-        <img
-          src="https://www.themoviedb.org/t/p/w500_and_h282_face/vVROCF9jnPmLh1ly29tFOlLax5x.jpg"
-          alt="Lebron-James"
-          class="hover:opacity-60 transition ease-in duration-200"
-        />
-        <span class="text-gray-300">Lebron James / SpaceMan</span>
-      </div>
-      <div class="mr-2 mb-5">
-        <img
-          src="https://www.themoviedb.org/t/p/w500_and_h282_face/vVROCF9jnPmLh1ly29tFOlLax5x.jpg"
-          alt="Lebron-James"
-          class="hover:opacity-60 transition ease-in duration-200"
-        />
-        <span class="text-gray-300">Lebron James / SpaceMan</span>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  props: {
+    images: {
+      required: true,
+    },
+  },
+  methods: {
+    movieImage(image) {
+      if (image.file_path) {
+        return "https://image.tmdb.org/t/p/w300/" + image.file_path;
+      } else {
+        return "https://via.placeholder.com/300x450";
+      }
+    },
+    openModal(image) {
+      let imageFullPath = "";
+      if (image.file_path) {
+        imageFullPath =
+          "https://image.tmdb.org/t/p/original/" + image.file_path;
+      } else {
+        imageFullPath = "https://via.placeholder.com/300x450";
+      }
+      this.$emit("on-image-click", imageFullPath);
+    },
+  },
+};
 </script>
 
 <style>

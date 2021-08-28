@@ -12,6 +12,8 @@
         focus:outline-none focus:outline-shadow
       "
       placeholder="Search..."
+      @input="debounceSearch"
+      v-model="searchTerm"
     />
     <div class="absolute">
       <svg
@@ -29,16 +31,23 @@
       </svg>
     </div>
 
-    <div v-if="false" class="absolute mt-12 ml-2 rounded bg-gray-600 w-60">
-      <ul class="mt-3">
-        <li class="flex items-center border-b border-gray-500 p-1">
+    <div class="absolute mt-12 ml-2 rounded bg-gray-600 w-60">
+      <ul class="mt-3" v-if="searchResult.length != 0">
+        <li
+          :key="index"
+          v-for="(movie, index) in searchResult"
+          class="flex items-center border-b border-gray-500 p-1"
+        >
           <img
-            src="@/assets/images/space-jam.jpg"
+            :src="posterPath(movie.poster_path)"
             alt="small-image"
             class="w-10 p1"
           />
-          <span class="ml-3">Space Jam 2</span>
+          <span class="ml-3">{{ movie.title }}</span>
         </li>
+      </ul>
+      <ul class="px-3">
+        <li v-if="noResultFound">No result found for "{{ searchTerm }}"</li>
       </ul>
     </div>
     <img src="@/assets/images/face.jpg" alt="face" class="h-10 rounded-full" />
@@ -46,7 +55,43 @@
 </template>
 
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      searchResult: [],
+      noResultFound: false,
+      searchTerm: "",
+    };
+  },
+  methods: {
+    debounceSearch(event) {
+      clearTimeout(this.debaounce);
+      this.debounce = setTimeout(() => {
+        if (event.target.value.length > 2) {
+          this.fetchSearch(event.target.value);
+        }
+      }, 600);
+    },
+
+    async fetchSearch(term) {
+      try {
+        const response = await this.$http.get("/search/movie?query=" + term);
+        this.searchResult = response.data.results;
+        this.noResultFound = response.data.results ? true : false;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    posterPath(poster_path) {
+      if (poster_path) {
+        return "https://image.tmdb.org/t/p/w500/" + poster_path;
+      } else {
+        return "https://via.placeholder.com/50x75";
+      }
+    },
+  },
+};
 </script>
 
 <style>
