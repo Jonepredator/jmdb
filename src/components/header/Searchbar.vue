@@ -50,8 +50,8 @@
           </router-link>
         </li>
       </ul>
-      <ul class="px-3" v-else>
-        <li v-if="noResultFound">No result found for "{{ searchTerm }}"</li>
+      <ul class="px-3" v-if="searchResult.length == 0 && showSearchResult">
+        <li>No result found for "{{ searchTerm }}"</li>
       </ul>
     </div>
     <img src="@/assets/images/face.jpg" alt="face" class="h-10 rounded-full" />
@@ -77,6 +77,8 @@ export default {
       this.debounce = setTimeout(() => {
         if (event.target.value.length > 2) {
           this.fetchSearch(event.target.value);
+        } else {
+          this.showSearchResult = false;
         }
       }, 600);
     },

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="container mx-auto flex mt-20 border-b border-gray-600 pb-2">
-      <img :src="posterPath" alt="" class="w-64" />
+      <img :src="posterPath" alt="big-poster" class="w-64" />
       <div class="ml-24">
         <h2 class="text-4xl font-semibold">{{ this.movie.title }}</h2>
         <span class="text-gray-500 text-sm flex">
@@ -116,8 +116,14 @@ export default {
       mediaURL: "",
     };
   },
-  mounted() {
-    this.fetchMovie(this.$route.params.id);
+
+  watch: {
+    "$route.params.id": {
+      handler() {
+        this.fetchMovie(this.$route.params.id);
+      },
+      immediate: true,
+    },
   },
 
   methods: {

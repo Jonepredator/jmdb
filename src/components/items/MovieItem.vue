@@ -3,7 +3,7 @@
     <router-link :to="`/movie/${movie.id}`">
       <img
         :src="posterPath"
-        alt="space-jam"
+        alt="poster"
         class="hover:opacity-75 transition ease-in duration-300"
       />
     </router-link>
