@@ -1,6 +1,7 @@
 <template>
   <div class="flex mt-4">
     <input
+      ref="searchBox"
       type="text"
       class="
         rounded-full
@@ -14,6 +15,7 @@
       placeholder="Search..."
       @input="debounceSearch"
       v-model="searchTerm"
+      @focus="handleFocus"
     />
     <div class="absolute">
       <svg
@@ -31,22 +33,24 @@
       </svg>
     </div>
 
-    <div class="absolute mt-12 ml-2 rounded bg-gray-600 w-60">
-      <ul class="mt-3" v-if="searchResult.length != 0">
-        <li
-          :key="index"
-          v-for="(movie, index) in searchResult"
-          class="flex items-center border-b border-gray-500 p-1"
-        >
-          <img
-            :src="posterPath(movie.poster_path)"
-            alt="small-image"
-            class="w-10 p1"
-          />
-          <span class="ml-3">{{ movie.title }}</span>
+    <div class="absolute mt-12 ml-2 rounded bg-gray-600 w-60 z-50">
+      <ul class="mt-3" v-if="showSearchResult">
+        <li :key="index" v-for="(movie, index) in searchResult">
+          <router-link
+            :to="`/movie/${movie.id}`"
+            @click.native="showSearchResult = false"
+            class="flex items-center border-b border-gray-500 p-1"
+          >
+            <img
+              :src="posterPath(movie.poster_path)"
+              alt="small-image"
+              class="w-10 p1"
+            />
+            <span class="ml-3">{{ movie.title }}</span>
+          </router-link>
         </li>
       </ul>
-      <ul class="px-3">
+      <ul class="px-3" v-else>
         <li v-if="noResultFound">No result found for "{{ searchTerm }}"</li>
       </ul>
     </div>
@@ -61,7 +65,11 @@ export default {
       searchResult: [],
       noResultFound: false,
       searchTerm: "",
+      showSearchResult: false,
     };
+  },
+  mounted() {
+    this.keyboardEvents();
   },
   methods: {
     debounceSearch(event) {
@@ -77,10 +85,39 @@ export default {
       try {
         const response = await this.$http.get("/search/movie?query=" + term);
         this.searchResult = response.data.results;
-        this.noResultFound = response.data.results ? true : false;
+        this.showSearchResult = response.data.results ? true : false;
       } catch (error) {
         console.log(error);
       }
+    },
+
+    handleFocus() {
+      if (this.searchTerm != "") {
+        this.showSearchResult = true;
+      }
+    },
+
+    keyboardEvents() {
+      let windowObj = this;
+
+      window.addEventListener("click", (e) => {
+        if (!this.$el.contains(e.target)) {
+          this.showSearchResult = false;
+        }
+      });
+
+      window.addEventListener("keypress", (e) => {
+        if (e.Code == "47") {
+          e.preventDefault();
+          windowObj.$refs.searchBox.focus();
+        }
+      });
+
+      window.addEventListener("keydown", (e) => {
+        if (e.key == "Escape") {
+          this.showSearchResult = false;
+        }
+      });
     },
 
     posterPath(poster_path) {
