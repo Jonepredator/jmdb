@@ -129,9 +129,13 @@ export default {
       const response = await this.$http.get(
         "https://api.themoviedb.org/3/person/" + actorId + "/combined_credits"
       );
-      this.knownFor = response.data.cast.slice(
-        Math.max(response.data.cast.length - 50, 1)
-      );
+      this.castMovies = response.data.cast;
+      this.knownFor = response.data.cast
+        .filter((x) => x.media_type == "movie")
+        .slice(1, 25);
+      // this.knownFor = response.data.cast.slice(
+      //   Math.max(response.data.cast.length - 50, 1)
+      // );
     },
 
     movieImage(movie) {

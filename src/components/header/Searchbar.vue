@@ -1,5 +1,5 @@
 <template>
-  <div class="flex mt-4">
+  <div class="flex mt-5 mr-5">
     <input
       ref="searchBox"
       type="text"

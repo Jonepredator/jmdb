@@ -1,5 +1,5 @@
 <template>
-  <div class="flex">
+  <div class="flex ml-5 mt-3">
     <router-link to="/">
       <img src="@/assets/images/logo.png" alt="logo" class="mb-4" />
     </router-link>
