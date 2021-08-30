@@ -54,12 +54,17 @@
         <li>No result found for "{{ searchTerm }}"</li>
       </ul>
     </div>
-    <img src="@/assets/images/face.jpg" alt="face" class="h-10 rounded-full" />
+    <AccountDropdown />
   </div>
 </template>
 
 <script>
+import AccountDropdown from "./AccountDropdown.vue";
 export default {
+  components: {
+    AccountDropdown,
+  },
+
   data() {
     return {
       searchResult: [],
