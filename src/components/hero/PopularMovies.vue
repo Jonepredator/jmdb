@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import MovieItem from "./items/MovieItem.vue";
+import MovieItem from "../items/MovieItem.vue";
 export default {
   components: {
     MovieItem,
