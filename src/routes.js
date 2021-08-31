@@ -8,7 +8,7 @@ let router = new VueRouter({
    mode: 'history',
    routes: [
       {
-         path: '/jmdb/',
+         path: '/jmdb',
          name: 'home',
          component: Home,
       },
